@@ -45,7 +45,7 @@ public class Progress {
 
   @NonNull
   @OneToOne
-  @JoinColumn(name = "user", nullable = false, updatable = false)
+  @JoinColumn(name = "user_field", nullable = false, updatable = false)
   @OnDelete(action = OnDeleteAction.CASCADE)
   private User user;
 

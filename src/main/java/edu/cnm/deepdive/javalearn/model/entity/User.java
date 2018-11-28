@@ -4,14 +4,17 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import java.net.URI;
 import java.util.Date;
 import java.util.UUID;
+import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
@@ -19,6 +22,7 @@ import org.springframework.stereotype.Component;
 @Component
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
+@Table(name = "user_table")
 public class User {
 
   private static EntityLinks entityLinks;
@@ -38,6 +42,16 @@ public class User {
   @NonNull
   @Column(length = 50, nullable = false)
   private String username;
+
+  @PostConstruct
+  private void initEntityLinks() {
+    String ignore = entityLinks.toString();
+  }
+
+  @Autowired
+  private void setEntityLinks(EntityLinks entityLinks) {
+    User.entityLinks = entityLinks;
+  }
 
   public UUID getUserId() {
     return userId;

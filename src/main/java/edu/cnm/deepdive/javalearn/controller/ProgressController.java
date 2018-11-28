@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@ExposesResourceFor(Progress.class)
 @RequestMapping("/progress")
 public class ProgressController {
 
