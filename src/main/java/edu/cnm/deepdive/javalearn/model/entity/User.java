@@ -1,6 +1,7 @@
 package edu.cnm.deepdive.javalearn.model.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import java.net.URI;
 import java.util.Date;
 import java.util.UUID;
 import javax.persistence.Column;
@@ -11,6 +12,7 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.springframework.hateoas.EntityLinks;
 import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
@@ -18,6 +20,8 @@ import org.springframework.stereotype.Component;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Entity
 public class User {
+
+  private static EntityLinks entityLinks;
 
   @Id
   @GeneratedValue(generator = "uuid2")
@@ -33,5 +37,25 @@ public class User {
 
   @NonNull
   @Column(length = 50, nullable = false)
-  private String userName;
+  private String username;
+
+  public UUID getUserId() {
+    return userId;
+  }
+
+  public Date getCreated() {
+    return created;
+  }
+
+  public String getUserName() {
+    return username;
+  }
+
+  public void setUsername(String userName) {
+    this.username = userName;
+  }
+
+  public URI getHref() {
+    return entityLinks.linkForSingleResource(Progress.class, userId).toUri();
+  }
 }
