@@ -7,13 +7,18 @@ import java.util.UUID;
 import javax.annotation.PostConstruct;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.EntityLinks;
 import org.springframework.lang.NonNull;
@@ -43,6 +48,11 @@ public class User {
   @Column(length = 50, nullable = false)
   private String username;
 
+  @OneToOne(fetch = FetchType.EAGER)
+  @JoinColumn(name = "progress")
+  @OnDelete(action = OnDeleteAction.CASCADE)
+  private Progress progress;
+
   @PostConstruct
   private void initEntityLinks() {
     String ignore = entityLinks.toString();
@@ -70,6 +80,14 @@ public class User {
   }
 
   public URI getHref() {
-    return entityLinks.linkForSingleResource(Progress.class, userId).toUri();
+    return entityLinks.linkForSingleResource(User.class, userId).toUri();
+  }
+
+  public Progress getProgress() {
+    return progress;
+  }
+
+  public void setProgress(Progress progress) {
+    this.progress = progress;
   }
 }
