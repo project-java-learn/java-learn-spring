@@ -48,8 +48,7 @@ public class User {
   @Column(length = 50, nullable = false)
   private String username;
 
-  @OneToOne(fetch = FetchType.EAGER)
-  @JoinColumn(name = "progress")
+  @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private Progress progress;
 

@@ -51,7 +51,7 @@ public class Progress {
   @NonNull
   @OneToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "user_field", nullable = false, updatable = false)
-  @OnDelete(action = OnDeleteAction.CASCADE)
+  @OnDelete(action = OnDeleteAction.NO_ACTION)
   private User user;
 
   private int score;

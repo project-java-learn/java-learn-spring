@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,6 +38,13 @@ public class UserProgressController {
   public Progress list(@PathVariable("userId") UUID userId) {
     User user = userRepository.findById(userId).get();
     return progressRepository.findByUser(user);
+  }
+
+  @GetMapping(value = "{progressId}", produces = MediaType.APPLICATION_JSON_VALUE)
+  public Progress get(@PathVariable("userId") UUID userId,
+      @PathVariable("progressId") UUID progressId) {
+    User user = userRepository.findById(userId).get();
+    return progressRepository.findFirstByUserAndProgressId(user, progressId).get();
   }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -69,6 +77,12 @@ public class UserProgressController {
     progress.setScore(progress.getScore() + score);
     progressRepository.save(progress);
     return ResponseEntity.created(progress.getHref()).body(progress);
+  }
+
+  @DeleteMapping(value = "{progressId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable("userId") UUID userId, @PathVariable("progressId") UUID progressId) {
+    progressRepository.delete(get(userId, progressId));
   }
 
   @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "User or progress not found.")

@@ -10,6 +10,7 @@ import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -48,6 +49,13 @@ public class UserController {
     userRepository.save(user);
     return ResponseEntity.created(user.getHref()).body(user);
   }
+
+  @DeleteMapping(value = "{userId}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void delete(@PathVariable("userId") UUID userId) {
+    userRepository.deleteById(userId);
+  }
+
 
   @ResponseStatus(value = HttpStatus.NOT_FOUND, reason = "User not found")
   @ExceptionHandler(NoSuchElementException.class)

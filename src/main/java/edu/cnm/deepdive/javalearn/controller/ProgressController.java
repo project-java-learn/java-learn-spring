@@ -1,7 +1,6 @@
 package edu.cnm.deepdive.javalearn.controller;
 
 import edu.cnm.deepdive.javalearn.model.dao.ProgressRepository;
-import edu.cnm.deepdive.javalearn.model.dao.UserRepository;
 import edu.cnm.deepdive.javalearn.model.entity.Progress;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -10,13 +9,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,13 +22,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/progress")
 public class ProgressController {
 
-  private UserRepository userRepository;
   private ProgressRepository progressRepository;
 
   @Autowired
-  public ProgressController(UserRepository userRepository,
-      ProgressRepository progressRepository) {
-    this.userRepository = userRepository;
+  public ProgressController(ProgressRepository progressRepository) {
     this.progressRepository = progressRepository;
   }
 
