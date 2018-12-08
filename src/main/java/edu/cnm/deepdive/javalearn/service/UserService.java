@@ -20,7 +20,6 @@ public class UserService {
   }
 
   public User createOrLoad(Principal principal) {
-
     Map<String, String> map = (Map<String, String>)((OAuth2AuthenticationDetails)((OAuth2Authentication) principal)
         .getDetails())
         .getDecodedDetails();
