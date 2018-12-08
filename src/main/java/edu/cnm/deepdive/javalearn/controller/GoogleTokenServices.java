@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -52,9 +54,15 @@ public class GoogleTokenServices implements ResourceServerTokenServices {
         Authentication base = new UsernamePasswordAuthenticationToken(payload.getSubject(),
             idTokenString, grants);
         OAuth2Request request = converter.extractAuthentication(payload).getOAuth2Request();
-        return new OAuth2Authentication(request, base);
+        OAuth2Authentication authentication = new OAuth2Authentication(request, base);
+        Map<String, String> map = (Map<String, String>) authentication.getDetails();
+        if (map == null) {
+          map = new HashMap<>();
+          authentication.setDetails(map);
+        }
+        map.put("email", payload.getEmail());
+        return authentication;
       } else {
-
         throw new BadCredentialsException(idTokenString);
       }
     } catch (GeneralSecurityException | IOException e) {

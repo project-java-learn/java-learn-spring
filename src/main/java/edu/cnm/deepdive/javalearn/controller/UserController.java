@@ -2,9 +2,12 @@ package edu.cnm.deepdive.javalearn.controller;
 
 import edu.cnm.deepdive.javalearn.model.dao.UserRepository;
 import edu.cnm.deepdive.javalearn.model.entity.User;
+import edu.cnm.deepdive.javalearn.service.UserService;
+import java.security.Principal;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
+import org.aspectj.bridge.context.PinpointingMessageHandler;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
@@ -26,16 +29,23 @@ import org.springframework.web.bind.annotation.RestController;
 public class UserController {
 
   private UserRepository userRepository;
+  private UserService userService;
 
   @Autowired
-
-  public UserController(UserRepository userRepository) {
+  public UserController(UserRepository userRepository, UserService userService) {
     this.userRepository = userRepository;
+    this.userService = userService;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<User> list() {
+  public List<User> list(Principal principal) {
+    userService.createOrLoad(principal);
     return userRepository.findAllByOrderByUserIdAsc();
+  }
+
+  @GetMapping(value = "me", produces = MediaType.APPLICATION_JSON_VALUE)
+  public User profile(Principal principal) {
+    return userService.createOrLoad(principal);
   }
 
   @GetMapping("{userId}")
@@ -45,7 +55,8 @@ public class UserController {
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<User> post(@RequestBody User user) {
+  public ResponseEntity<User> post(@RequestBody User user, Principal principal) {
+    userService.createOrLoad(principal);
     userRepository.save(user);
     return ResponseEntity.created(user.getHref()).body(user);
   }

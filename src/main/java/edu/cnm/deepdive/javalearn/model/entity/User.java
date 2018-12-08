@@ -48,6 +48,10 @@ public class User {
   @Column(length = 50, nullable = false)
   private String username;
 
+  @NonNull
+  @Column(name = "oauth_id", unique = true)
+  private String oAuthId;
+
   @OneToOne(fetch = FetchType.EAGER, mappedBy = "user")
   @OnDelete(action = OnDeleteAction.CASCADE)
   private Progress progress;
@@ -88,5 +92,14 @@ public class User {
 
   public void setProgress(Progress progress) {
     this.progress = progress;
+  }
+
+  @NonNull
+  public String getOAuthId() {
+    return oAuthId;
+  }
+
+  public void setOAuthId(@NonNull String oAuthId) {
+    this.oAuthId = oAuthId;
   }
 }

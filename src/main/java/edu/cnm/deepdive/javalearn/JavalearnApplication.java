@@ -6,6 +6,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 import org.springframework.security.oauth2.config.annotation.web.configuration.ResourceServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configurers.ResourceServerSecurityConfigurer;
@@ -13,9 +15,7 @@ import org.springframework.security.oauth2.config.annotation.web.configurers.Res
 @EnableWebSecurity
 @EnableResourceServer
 @SpringBootApplication
-public class JavalearnApplication extends ResourceServerConfigurerAdapter {
-
-  //TODO Make this extend ResourceConfigurerADapter
+public class JavalearnApplication extends ResourceServerConfigurerAdapter  {
 
   @Value("${oauth.clientId}")
   private String clientId;

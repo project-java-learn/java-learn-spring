@@ -4,6 +4,8 @@ import edu.cnm.deepdive.javalearn.model.dao.ProgressRepository;
 import edu.cnm.deepdive.javalearn.model.dao.UserRepository;
 import edu.cnm.deepdive.javalearn.model.entity.Progress;
 import edu.cnm.deepdive.javalearn.model.entity.User;
+import edu.cnm.deepdive.javalearn.service.UserService;
+import java.security.Principal;
 import java.util.NoSuchElementException;
 import java.util.UUID;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,17 +28,19 @@ public class UserProgressController {
 
   private UserRepository userRepository;
   private ProgressRepository progressRepository;
+  private UserService userService;
 
   @Autowired
   public UserProgressController(UserRepository userRepository,
-      ProgressRepository progressRepository) {
+      ProgressRepository progressRepository, UserService userService) {
     this.userRepository = userRepository;
     this.progressRepository = progressRepository;
+    this.userService = userService;
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public Progress list(@PathVariable("userId") UUID userId) {
-    User user = userRepository.findById(userId).get();
+  public Progress list(Principal principal) {
+    User user = userService.createOrLoad(principal);
     return progressRepository.findByUser(user);
   }
 
