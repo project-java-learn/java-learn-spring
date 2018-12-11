@@ -5,11 +5,9 @@ import edu.cnm.deepdive.javalearn.model.entity.Progress;
 import edu.cnm.deepdive.javalearn.model.entity.User;
 import edu.cnm.deepdive.javalearn.service.UserService;
 import java.security.Principal;
-import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
-import javax.print.attribute.standard.Media;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.ExposesResourceFor;
 import org.springframework.http.HttpStatus;
@@ -73,14 +71,9 @@ public class ProgressController {
     return user.getProgress();
   }
 
-//  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-//  public List<Progress> list() {
-//    return progressRepository.findAllByOrderByUserAsc();
-//  }
-
-  @GetMapping(value = "/{progressId}")
-  public Progress get(@PathVariable("progressId") UUID progressId){
-    return progressRepository.findById(progressId).get();
+  @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
+  public List<Progress> list() {
+    return progressRepository.findAllByOrderByUserAsc();
   }
 
   @DeleteMapping(value = "{progressId}")

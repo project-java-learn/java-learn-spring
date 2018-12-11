@@ -63,26 +63,6 @@ public class UserProgressController {
     return ResponseEntity.created(progress.getHref()).body(progress);
   }
 
-  @PostMapping(value = "{progressId}/levels", consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Progress> updateLevels(@PathVariable("progressId")UUID progressId,
-      @RequestBody String level) {
-    Progress progress = progressRepository.findById(progressId).get();
-    progress.getLevels().add(level);
-    progressRepository.save(progress);
-    return ResponseEntity.created(progress.getHref()).body(progress);
-  }
-
-  @PostMapping(value = "{progressId}/score", consumes = MediaType.APPLICATION_JSON_VALUE,
-      produces = MediaType.APPLICATION_JSON_VALUE)
-  public ResponseEntity<Progress> updateScore(@PathVariable("progressId")UUID progressId,
-      @RequestBody int score) {
-    Progress progress = progressRepository.findById(progressId).get();
-    progress.setScore(progress.getScore() + score);
-    progressRepository.save(progress);
-    return ResponseEntity.created(progress.getHref()).body(progress);
-  }
-
   @DeleteMapping(value = "{progressId}")
   @ResponseStatus(HttpStatus.NO_CONTENT)
   public void delete(@PathVariable("userId") UUID userId, @PathVariable("progressId") UUID progressId) {

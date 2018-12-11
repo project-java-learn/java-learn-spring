@@ -48,10 +48,6 @@ public class UserController {
     return userService.createOrLoad(principal);
   }
 
-  @GetMapping("{userId}")
-  public User get(@PathVariable UUID userId){
-    return userRepository.findById(userId).get();
-  }
 
   @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE,
       produces = MediaType.APPLICATION_JSON_VALUE)
