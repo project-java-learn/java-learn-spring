@@ -78,6 +78,10 @@ public class Progress {
     return levels;
   }
 
+  public void setLevels(List<String> levels) {
+    this.levels = levels;
+  }
+
   @JsonIgnore
   public User getUser() {
     return user;

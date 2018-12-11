@@ -5,6 +5,7 @@ import edu.cnm.deepdive.javalearn.model.entity.Progress;
 import edu.cnm.deepdive.javalearn.model.entity.User;
 import edu.cnm.deepdive.javalearn.service.UserService;
 import java.security.Principal;
+import java.util.InputMismatchException;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.UUID;
@@ -17,6 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -41,18 +43,40 @@ public class ProgressController {
   @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<Progress> post(@RequestBody Progress progress, Principal principal) {
     User user = userService.createOrLoad(principal);
+    if(user.getProgress() == null) {
+      progress.setUser(user);
+      progressRepository.save(progress);
+      return ResponseEntity.created(progress.getHref()).body(progress);
+    } else {
+      return ResponseEntity.ok().body(user.getProgress());
+    }
+  }
 
-    progress.setUser(user);
-    progressRepository.save(progress);
+  @PatchMapping(produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+  public ResponseEntity<Progress> updateProgress(@RequestBody Progress progress, Principal principal) {
+    User user = userService.createOrLoad(principal);
+
+    Progress savedProgress = user.getProgress();
+
+    savedProgress.setScore(progress.getScore());
+    savedProgress.setLevels(progress.getLevels());
+
+    progressRepository.save(savedProgress);
 
     return ResponseEntity.created(progress.getHref()).body(progress);
-
   }
 
   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-  public List<Progress> list() {
-    return progressRepository.findAllByOrderByUserAsc();
+  public Progress getProgress(Principal principal) {
+    User user = userService.createOrLoad(principal);
+
+    return user.getProgress();
   }
+
+//  @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+//  public List<Progress> list() {
+//    return progressRepository.findAllByOrderByUserAsc();
+//  }
 
   @GetMapping(value = "/{progressId}")
   public Progress get(@PathVariable("progressId") UUID progressId){
